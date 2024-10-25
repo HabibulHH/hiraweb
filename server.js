@@ -17,12 +17,16 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
     console.log('A client connected:', socket.id);
 
-    // Broadcast a welcome message to the connected client
-    socket.emit('message', 'Welcome to the chat room!');
+    // Handle user joining with a name
+    socket.on('join', (userName) => {
+        console.log(`${userName} has joined the chat.`);
+        socket.emit('message', `Welcome ${userName}!`);
+        socket.broadcast.emit('message', `${userName} has joined the chat.`);
+    });
 
     // Broadcast received messages to all clients
-    socket.on('message', (message) => {
-        io.emit('message', message);
+    socket.on('message', ({ userName, message }) => {
+        io.emit('message', `${userName}: ${message}`);
     });
 
     // Handle client disconnect
