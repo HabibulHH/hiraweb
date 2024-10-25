@@ -47,6 +47,22 @@ app.post('/submit-form', (req, res) => {
     res.send('Thank you for your message!');
 });
 
+// API to get all form submissions
+app.get('/api/submissions', (req, res) => {
+    fs.readFile('request.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading file', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        try {
+            const submissions = JSON.parse(data);
+            res.json(submissions);
+        } catch (parseErr) {
+            console.error('Error parsing JSON data', parseErr);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+});
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
