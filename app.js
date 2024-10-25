@@ -19,10 +19,10 @@ app.get('/', (req, res) => {
 
 // Route to handle form submission
 app.post('/submit-form', (req, res) => {
-    const { name, email, message } = req.body;
-    console.log(`Received form submission: Name - ${name}, Email - ${email}, Message - ${message}`);
+    const { name, email, mobile, message } = req.body;
+    console.log(`Received form submission: Name - ${name}, Email - ${email}, Mobile - ${mobile}, Message - ${message}`);
     // Here you can add logic to process the form data, e.g., save to a database or send an email
-     // 
+
     // Send a response back to the client
     res.send('Thank you for your message!');
 });
