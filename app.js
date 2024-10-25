@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-
+const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 4040;
 
@@ -21,6 +21,26 @@ app.get('/', (req, res) => {
 app.post('/submit-form', (req, res) => {
     const { name, email, mobile, message } = req.body;
     console.log(`Received form submission: Name - ${name}, Email - ${email}, Mobile - ${mobile}, Message - ${message}`);
+    
+    const formData = { name, email, mobile, message };
+    fs.readFile('request.json', 'utf8', (err, data) => {
+        let jsonData = [];
+        if (!err && data) {
+            try {
+                jsonData = JSON.parse(data);
+            } catch (parseErr) {
+                console.error('Error parsing JSON data', parseErr);
+            }
+        }
+        jsonData.push(formData);
+        fs.writeFile('request.json', JSON.stringify(jsonData, null, 2), (err) => {
+            if (err) {
+                console.error('Error writing to file', err);
+            } else {
+                console.log('Form data appended to request.json');
+            }
+        });
+    });
     // Here you can add logic to process the form data, e.g., save to a database or send an email
 
     // Send a response back to the client
